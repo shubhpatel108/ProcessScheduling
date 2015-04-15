@@ -47,6 +47,10 @@ when 6
 when 7
 	g.title = 'The one with decreasing execution time'
 	batches = decreasing
+
+when 8
+	g.title = 'The one with decreasing execution time'
+	batches = random_alternate
 end
 
 pids = {}
@@ -56,7 +60,7 @@ end
 g.labels = pids
 
 batches.each_with_index do |batch, i|
-	g.data "Batch no #{i+1}", batch.map{|p| p.last}
+	g.data "Batch no #{i+1}", batch.map{|p| p[2]}
 end
 
 g.x_axis_label = 'PIDs'

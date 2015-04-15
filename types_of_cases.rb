@@ -7,7 +7,7 @@ module TypesOfCases
 
 			(1..@n).each do |i|
 				exceution_time = rand(@min_exection_time-1..@max_exection_time)
-				process = [i, 0, exceution_time]
+				process = [i, 0, exceution_time, exceution_time]
 				batch << process
 			end
 
@@ -27,7 +27,7 @@ module TypesOfCases
 				else
 					exceution_time = @min_exection_time
 				end
-				process = [i, 0, exceution_time]
+				process = [i, 0, exceution_time, exceution_time]
 				batch << process
 			end
 
@@ -50,7 +50,7 @@ module TypesOfCases
 				else
 					exceution_time = rand(@min_exection_time-1..lower)
 				end
-				process = [i, 0, exceution_time]
+				process = [i, 0, exceution_time, exceution_time]
 				batch << process
 			end
 
@@ -65,7 +65,7 @@ module TypesOfCases
 			batch = []
 			(1..@n).each do |i|
 				exceution_time = @min_exection_time
-				process = [i, 0, exceution_time]
+				process = [i, 0, exceution_time, exceution_time]
 				batch << process
 			end
 
@@ -80,7 +80,7 @@ module TypesOfCases
 			batch = []
 			(1..@n).each do |i|
 				exceution_time = @max_exection_time
-				process = [i, 0, exceution_time]
+				process = [i, 0, exceution_time, exceution_time]
 				batch << process
 			end
 
@@ -96,7 +96,7 @@ module TypesOfCases
 
 		(1..@n).each do |i|
 			exceution_time = (@min_exection_time + multiplier*(i)).to_i
-			process = [i, 0, exceution_time]
+			process = [i, 0, exceution_time, exceution_time]
 			batch << process
 		end
 
@@ -111,11 +111,34 @@ module TypesOfCases
 
 		(1..@n).each do |i|
 			exceution_time = (@max_exection_time - multiplier*(i-1)).to_i
-			process = [i, 0, exceution_time]
+			process = [i, 0, exceution_time, exceution_time]
 			batch << process
 		end
 
 		all_batches << batch
+		return all_batches
+	end
+
+	def random_alternate(count=1)
+		all_batches = []
+		min = rand(@min_exection_time..@max_exection_time)
+		
+		count.times do
+			batch = []
+			(1..@n).each do |i|
+				if i%2==0
+					exceution_time = rand(min..@max_exection_time)
+					min = exceution_time
+				else
+					exceution_time = rand(@min_exection_time-1..min)
+					min = exceution_time
+				end
+				process = [i, 0, exceution_time, exceution_time]
+				batch << process
+			end
+			all_batches << batch
+		end
+
 		return all_batches
 	end
 end
