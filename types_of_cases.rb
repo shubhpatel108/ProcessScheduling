@@ -1,6 +1,6 @@
 module TypesOfCases
 
-	def produce_random_cases(count)
+	def produce_random_cases(count=1)
 		all_batches = []
 		(count).times do
 			batch = []
@@ -16,7 +16,8 @@ module TypesOfCases
 		return all_batches
 	end
 
-	def produce_alternate_cases(count)
+	def produce_alternate_cases(count=1)
+		all_batches = []
 		(count).times do
 			batch = []
 
@@ -30,11 +31,13 @@ module TypesOfCases
 				batch << process
 			end
 
-			puts batch.to_s
+			all_batches << batch
 		end
+		return all_batches
 	end
 
-	def produce_loose_alternate(count)
+	def produce_loose_alternate(count=1)
+		all_batches = []
 		(count).times do
 			batch = []
 
@@ -51,11 +54,13 @@ module TypesOfCases
 				batch << process
 			end
 
-			puts batch.to_s
+			all_batches << batch
 		end
+		return all_batches
 	end
 
 	def all_small(count=1)
+		all_batches = []
 		count.times do
 			batch = []
 			(1..@n).each do |i|
@@ -64,11 +69,13 @@ module TypesOfCases
 				batch << process
 			end
 
-			puts batch.to_s
+			all_batches << batch
 		end
+		return all_batches
 	end
 
 	def all_big(count=1)
+		all_batches = []
 		count.times do
 			batch = []
 			(1..@n).each do |i|
@@ -77,33 +84,38 @@ module TypesOfCases
 				batch << process
 			end
 
-			puts batch.to_s
+			all_batches << batch
 		end
+		return all_batches
 	end
 
 	def increasing
+		all_batches = []
 		multiplier = (@max_exection_time.to_f - @min_exection_time.to_f)/@n
 		batch = []
 
 		(1..@n).each do |i|
-			exceution_time = (@min_exection_time + multiplier*i).to_i
+			exceution_time = (@min_exection_time + multiplier*(i)).to_i
 			process = [i, 0, exceution_time]
 			batch << process
 		end
 
-		puts batch.to_s
+		all_batches << batch
+		return all_batches
 	end
 
 	def decreasing
+		all_batches = []
 		multiplier = (@max_exection_time.to_f - @min_exection_time.to_f)/@n
 		batch = []
 
 		(1..@n).each do |i|
-			exceution_time = (@max_exection_time - multiplier*i).to_i
+			exceution_time = (@max_exection_time - multiplier*(i-1)).to_i
 			process = [i, 0, exceution_time]
 			batch << process
 		end
 
-		puts batch.to_s
+		all_batches << batch
+		return all_batches
 	end
 end
