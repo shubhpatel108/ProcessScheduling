@@ -1,6 +1,7 @@
 module TypesOfCases
 
 	def produce_random_cases(count)
+		all_batches = []
 		(count).times do
 			batch = []
 
@@ -10,9 +11,9 @@ module TypesOfCases
 				batch << process
 			end
 
-			puts batch.to_s
-
+			all_batches << batch
 		end
+		return all_batches
 	end
 
 	def produce_alternate_cases(count)
