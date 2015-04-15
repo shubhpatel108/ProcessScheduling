@@ -1,4 +1,3 @@
-require "awesome_print"
 require "./types_of_cases.rb"
 require "gruff"
 
@@ -21,7 +20,7 @@ g = Gruff::Line.new
 
 case choice
 when 1
-	g.title = 'Processes with Random execution time'
+	# g.title = 'Processes with Random execution time'
 	batches = produce_random_cases(2)
 
 when 2
@@ -51,6 +50,22 @@ when 7
 when 8
 	g.title = 'The one with decreasing execution time'
 	batches = random_alternate
+end
+
+batch_no = 1
+batches.each do |b|
+	print "Batch: "
+	print batch_no
+	print "\n"
+	temp = b.dup
+	shortest_remaining_time_first(temp)
+	temp = b.dup
+	shortest_job_first(temp)
+	temp = b.dup
+	first_come_first_serve(temp)
+	temp = b.dup
+	round_robin(temp, 2.0, 2.0)
+	batch_no += 1
 end
 
 pids = {}
