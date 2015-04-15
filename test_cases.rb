@@ -77,3 +77,15 @@ def all_small(count)
 		puts batch.to_s
 	end
 end
+
+def all_big(count)
+	count.times do
+		(1..n).each do |i|
+			exceution_time = max_exection_time
+			process = [i, 0, exceution_time]
+			batch << process
+		end
+
+		puts batch.to_s
+	end
+end
