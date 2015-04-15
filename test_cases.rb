@@ -1,14 +1,13 @@
 require "awesome_print"
-n = gets.chomp.to_i
+@n = gets.chomp.to_i
 
 print "Minimum Exceution time"
-min_exection_time = gets.chomp.to_i + 1
+@min_exection_time = gets.chomp.to_i
 
 print "Maximum Exceution time"
-max_exection_time = gets.chomp.to_i
+@max_exection_time = gets.chomp.to_i
 
 # ap n
-
 
 
 
@@ -16,8 +15,8 @@ def produce_random_cases(count)
 	(count).times do
 		batch = []
 
-		(1..n).each do |i|
-			exceution_time = rand(min_exection_time..max_exection_time)
+		(1..@n).each do |i|
+			exceution_time = rand(@min_exection_time-1..@max_exection_time)
 			process = [i, 0, exceution_time]
 			batch << process
 		end
@@ -31,11 +30,11 @@ def produce_alternate_cases(count)
 	(count).times do
 		batch = []
 
-		(1..n).each do |i|
+		(1..@n).each do |i|
 			if i%2==0
-				exceution_time = max_exection_time
+				exceution_time = @max_exection_time
 			else
-				exceution_time = min_exection_time
+				exceution_time = @min_exection_time
 			end
 			process = [i, 0, exceution_time]
 			batch << process
@@ -49,14 +48,14 @@ def produce_loose_alternate(count)
 	(count).times do
 		batch = []
 
-		lower = min_exection_time + (max_exection_time - min_exection_time)/3
-		upper = max_exection_time - (max_exection_time - min_exection_time)/3
+		lower = @min_exection_time + (@max_exection_time - @min_exection_time)/3
+		upper = @max_exection_time - (@max_exection_time - @min_exection_time)/3
 
-		(1..n).each do |i|
+		(1..@n).each do |i|
 			if i%2==0
-				exceution_time = rand(min_exection_time..lower)
+				exceution_time = rand(upper..@max_exection_time)
 			else
-				exceution_time = rand(min_exection_time..upper)
+				exceution_time = rand(@min_exection_time-1..lower)
 			end
 			process = [i, 0, exceution_time]
 			batch << process
@@ -66,10 +65,11 @@ def produce_loose_alternate(count)
 	end
 end
 
-def all_small(count)
+def all_small(count=1)
 	count.times do
-		(1..n).each do |i|
-			exceution_time = min_exection_time
+		batch = []
+		(1..@n).each do |i|
+			exceution_time = @min_exection_time
 			process = [i, 0, exceution_time]
 			batch << process
 		end
@@ -78,10 +78,11 @@ def all_small(count)
 	end
 end
 
-def all_big(count)
+def all_big(count=1)
 	count.times do
-		(1..n).each do |i|
-			exceution_time = max_exection_time
+		batch = []
+		(1..@n).each do |i|
+			exceution_time = @max_exection_time
 			process = [i, 0, exceution_time]
 			batch << process
 		end
@@ -89,3 +90,23 @@ def all_big(count)
 		puts batch.to_s
 	end
 end
+
+def increasing
+	multiplier = (@max_exection_time.to_f - @min_exection_time.to_f)/@n
+	batch = []
+
+	(1..@n).each do |i|
+		exceution_time = (@min_exection_time + multiplier*i).to_i
+		process = [i, 0, exceution_time]
+		batch << process
+	end
+
+	puts batch.to_s
+end
+
+produce_random_cases(1)
+produce_alternate_cases(1)
+produce_loose_alternate(1)
+all_small
+all_big
+increasing
