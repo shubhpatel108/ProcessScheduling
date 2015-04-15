@@ -49,7 +49,7 @@ when 7
 	batches = decreasing
 
 when 8
-	g.title = 'The one with decreasing execution time'
+	g.title = 'The one with randome alternative time'
 	batches = random_alternate
 end
 
