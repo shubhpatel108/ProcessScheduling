@@ -92,4 +92,17 @@ module TypesOfCases
 
 		puts batch.to_s
 	end
+
+	def decreasing
+		multiplier = (@max_exection_time.to_f - @min_exection_time.to_f)/@n
+		batch = []
+
+		(1..@n).each do |i|
+			exceution_time = (@max_exection_time - multiplier*i).to_i
+			process = [i, 0, exceution_time]
+			batch << process
+		end
+
+		puts batch.to_s
+	end
 end

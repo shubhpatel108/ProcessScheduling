@@ -19,3 +19,4 @@ produce_loose_alternate(1)
 all_small
 all_big
 increasing
+decreasing
