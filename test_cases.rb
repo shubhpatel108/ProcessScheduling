@@ -185,6 +185,8 @@ batches.each do |b|
 		rrr += 2.5
 	end
 	rating << [rsrt, rsjf, rfcfs, rrr]
+	print rating[batch_no-1]
+	print "\n"
 	batch_no += 1
 end
 

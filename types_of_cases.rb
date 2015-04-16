@@ -6,7 +6,7 @@ module TypesOfCases
 			batch = []
 
 			(1..@n).each do |i|
-				exceution_time = rand(@min_exection_time..@max_exection_time)
+				exceution_time = rand(@min_exection_time-1..@max_exection_time)
 				process = [i, 0, exceution_time, exceution_time]
 				batch << process
 			end
@@ -38,11 +38,11 @@ module TypesOfCases
 
 	def produce_loose_alternate(count=1)
 		all_batches = []
-		lower = @min_exection_time + (@max_exection_time - @min_exection_time)/3
-		upper = @max_exection_time - (@max_exection_time - @min_exection_time)/3
-
 		(count).times do
 			batch = []
+
+			lower = @min_exection_time + (@max_exection_time - @min_exection_time)/3
+			upper = @max_exection_time - (@max_exection_time - @min_exection_time)/3
 
 			(1..@n).each do |i|
 				if i%2==0
@@ -89,58 +89,33 @@ module TypesOfCases
 		return all_batches
 	end
 
-	def all_same(count=1)
+	def increasing
 		all_batches = []
-		count.times do
-			batch = []
-			@same_time = rand(@min_exection_time..@max_exection_time)
-			(1..@n).each do |i|
-				exceution_time = @same_time
-				process = [i, 0, exceution_time, exceution_time]
-				batch << process
-			end
+		multiplier = (@max_exection_time.to_f - @min_exection_time.to_f)/@n
+		batch = []
 
-			all_batches << batch
+		(1..@n).each do |i|
+			exceution_time = (@min_exection_time + multiplier*(i)).to_i
+			process = [i, 0, exceution_time, exceution_time]
+			batch << process
 		end
+
+		all_batches << batch
 		return all_batches
 	end
 
-	def increasing(count=1)
+	def decreasing
 		all_batches = []
+		multiplier = (@max_exection_time.to_f - @min_exection_time.to_f)/@n
+		batch = []
 
-		count.times do
-			batch = []
-			min_time = rand(@min_exection_time..@max_exection_time/2)
-			max_time = rand(min_time..@max_exection_time)
-			multiplier = (max_time.to_f - min_time.to_f)/@n
-			(1..@n).each do |i|
-				exceution_time = (min_time + multiplier*(i)).to_i
-				process = [i, 0, exceution_time, exceution_time]
-				batch << process
-			end
-
-			all_batches << batch
+		(1..@n).each do |i|
+			exceution_time = (@max_exection_time - multiplier*(i-1)).to_i
+			process = [i, 0, exceution_time, exceution_time]
+			batch << process
 		end
 
-		return all_batches
-	end
-
-	def decreasing(count=1)
-		all_batches = []
-
-		count.times do
-			batch = []
-			max_time = rand(@max_exection_time/2..@max_exection_time)
-			min_time = rand(@min_exection_time..max_time)
-			multiplier = (max_time.to_f - min_time.to_f)/@n
-			(1..@n).each do |i|
-				exceution_time = (max_time - multiplier*(i-1)).to_i
-				process = [i, 0, exceution_time, exceution_time]
-				batch << process
-			end
-
-			all_batches << batch
-			end
+		all_batches << batch
 		return all_batches
 	end
 
@@ -164,28 +139,6 @@ module TypesOfCases
 			all_batches << batch
 		end
 
-		return all_batches
-	end
-
-	def bump(count=1)
-		all_batches = []
-
-		count.times do
-			batch = []
-			same_time = rand(@min_exection_time..@max_exection_time-1)
-			bump_at = rand(@n) + 1
-			(1..@n).each do |i|
-				if i==bump_at
-					exceution_time = rand(same_time..@max_exection_time)
-				else
-					exceution_time = same_time
-				end
-				process = [i, 0, exceution_time, exceution_time]
-				batch << process
-			end
-
-			all_batches << batch
-		end
 		return all_batches
 	end
 
