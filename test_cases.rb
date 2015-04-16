@@ -17,6 +17,7 @@ include TypesOfCases
 
 g1 = Gruff::Line.new
 g2 = Gruff::Line.new
+g3 = Gruff::Line.new
 
 
 case choice
@@ -28,12 +29,12 @@ when 1
 when 2
 	g1.title = 'Alternate execution time, Response Time'
 	g2.title = 'Alternate execution time, Turn Around Time'
-	batches = produce_alternate_cases
+	batches = produce_alternate_cases(20)
 
 when 3
 	g1.title = 'loose alternate execution time, Response Time'
 	g2.title = 'loose alternate execution time, Turn Around Time'
-	batches = produce_loose_alternate(2)
+	batches = produce_loose_alternate(20)
 
 when 4
 	g1.title = 'All smallest execution time, Response Time'
@@ -65,6 +66,7 @@ srt_resp = []
 sjf_resp = []
 fcfs_resp = []
 rr_resp = []
+rating = []
 
 batch_no = 1
 batches.each do |b|
@@ -78,7 +80,100 @@ batches.each do |b|
 	temp = Marshal.load(Marshal.dump(b))
 	fcfs_resp << first_come_first_serve(temp)
 	temp = Marshal.load(Marshal.dump(b))
-	rr_resp << round_robin(temp, 10.0, 1.0)
+	rr_resp << round_robin(temp, 10.0, 0.01)
+	c = []
+	c = [srt_resp[batch_no-1][1], sjf_resp[batch_no-1][1], fcfs_resp[batch_no-1][1], rr_resp[batch_no-1][1]].minmax
+	a = c[0]
+	b = c[1]
+	unit = (b-a)/4.0
+	rsrt = 0.0
+	rsjf = 0.0
+	rfcfs = 0.0
+	rrr = 0.0
+	if srt_resp[batch_no-1][1] <= a + unit
+		rsrt += 10.0
+	elsif srt_resp[batch_no-1][1] <= a + (2*unit)
+		rsrt += 7.5
+	elsif srt_resp[batch_no-1][1] <= a + (3*unit)
+		rsrt += 5.0
+	elsif srt_resp[batch_no-1][1] <= b
+		rsrt += 2.5
+	end
+
+	if sjf_resp[batch_no-1][1] <= a + unit
+		rsjf += 10.0
+	elsif sjf_resp[batch_no-1][1] <= a + (2*unit)
+		rsjf += 7.5
+	elsif sjf_resp[batch_no-1][1] <= a + (3*unit)
+		rsjf += 5.0
+	elsif sjf_resp[batch_no-1][1] <= b
+		rsjf += 2.5
+	end	
+		
+	if fcfs_resp[batch_no-1][1] <= a + unit
+		rfcfs += 10.0
+	elsif fcfs_resp[batch_no-1][1] <= a + (2*unit)
+		rfcfs += 7.5
+	elsif fcfs_resp[batch_no-1][1] <= a + (3*unit)
+		rfcfs += 5.0
+	elsif fcfs_resp[batch_no-1][1] <= b
+		rfcfs += 2.5
+	end
+
+	if rr_resp[batch_no-1][1] <= a + unit
+		rrr += 10.0
+	elsif rr_resp[batch_no-1][1] <= a + (2*unit)
+		rrr += 7.5
+	elsif rr_resp[batch_no-1][1] <= a + (3*unit)
+		rrr += 5.0
+	elsif rr_resp[batch_no-1][1] <= b
+		rrr += 2.5
+	end
+
+	c = [srt_resp[batch_no-1][2], sjf_resp[batch_no-1][2], fcfs_resp[batch_no-1][2], rr_resp[batch_no-1][2]].minmax
+	a = c[0]
+	b = c[1]
+	unit = (b-a)/4.0
+	if srt_resp[batch_no-1][2] <= a + unit
+		rsrt += 10.0
+	elsif srt_resp[batch_no-1][2] <= a + (2*unit)
+		rsrt += 7.5
+	elsif srt_resp[batch_no-1][2] <= a + (3*unit)
+		rsrt += 5.0
+	elsif srt_resp[batch_no-1][2] <= b
+		rsrt += 2.5
+	end
+
+	if sjf_resp[batch_no-1][2] <= a + unit
+		rsjf += 10.0
+	elsif sjf_resp[batch_no-1][2] <= a + (2*unit)
+		rsjf += 7.5
+	elsif sjf_resp[batch_no-1][2] <= a + (3*unit)
+		rsjf += 5.0
+	elsif sjf_resp[batch_no-1][2] <= b
+		rsjf += 2.5
+	end	
+		
+	if fcfs_resp[batch_no-1][2] <= a + unit
+		rfcfs += 10.0
+	elsif fcfs_resp[batch_no-1][2] <= a + (2*unit)
+		rfcfs += 7.5
+	elsif fcfs_resp[batch_no-1][2] <= a + (3*unit)
+		rfcfs += 5.0
+	elsif fcfs_resp[batch_no-1][2] <= b
+		rfcfs += 2.5
+	end
+
+	if rr_resp[batch_no-1][2] <= a + unit
+		rrr += 10.0
+	elsif rr_resp[batch_no-1][2] <= a + (2*unit)
+		rrr += 7.5
+	elsif rr_resp[batch_no-1][2] <= a + (3*unit)
+		rrr += 5.0
+	elsif rr_resp[batch_no-1][2] <= b
+		rrr += 2.5
+	end
+	rating << [rsrt, rsjf, rfcfs, rrr]
 	batch_no += 1
 end
 
@@ -114,7 +209,6 @@ fork do
 	value = %x( eog cases.png &)
 end
 
-#Graph for turn around time
 g2.labels = batch_nos
 
 g2.data "Shortest remaining time first", srt_resp.map{|p| p[2]}
@@ -128,4 +222,20 @@ g2.y_axis_label = 'Response time'
 g2.write('cases1.png')
 fork do
 	value = %x( eog cases1.png )
+end
+x = 1
+y = 1
+
+g3.labels = batch_nos
+g3.data "Shortest remaining time first", rating.map { |r| r[0]}
+g3.data "Shortest Job first", rating.map { |r| r[1]}
+g3.data "First come first serve", rating.map { |r| r[2]}
+g3.data "Round Robin", rating.map { |r| r[3]}
+
+g3.x_axis_label = 'Batch no'
+g3.y_axis_label = 'Time rating'
+
+g3.write('cases2.png')
+fork do
+	value = %x( eog cases2.png )
 end

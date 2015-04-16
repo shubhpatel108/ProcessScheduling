@@ -176,8 +176,8 @@ module TypesOfCases
             current_process = ready_queue[ready_queue.length-1]
             total_response_time = total_response_time + time - current_process[1]
             time = time + current_process[2]
-            total_waiting_time = total_waiting_time + time - current_process[2]
-            total_turn_around_time = total_turn_around_time + time
+            total_waiting_time = total_waiting_time + time - current_process[2] - current_process[1]
+            total_turn_around_time = total_turn_around_time + time - current_process[1]
             ready_queue.pop()
         end
         print "SJF: \n"
@@ -210,8 +210,8 @@ module TypesOfCases
             time = time + 1
             current_process[3] = current_process[3] - 1
             if current_process[3] == 0
-                total_waiting_time = total_waiting_time + time - current_process[2]
-                total_turn_around_time = total_turn_around_time + time
+                total_waiting_time = total_waiting_time + time - current_process[2] - current_process[1]
+                total_turn_around_time = total_turn_around_time + time - current_process[1]
                 ready_queue.delete_at(0)
             else
                 1.upto(ready_queue.length-1) do |index|
@@ -238,7 +238,6 @@ module TypesOfCases
     def first_come_first_serve(processes)
         #read_input("test.txt", processes)
         processes.sort!{|proc1, proc2| proc1[1] <=> proc2[1]}
-        print processes
         turn_around_time = 0.0
         response_time = 0.0
         current_time = 0.0
@@ -270,7 +269,6 @@ module TypesOfCases
     def round_robin(processes, time_quanta, context_switch)
         #read_input("test.txt", processes)
         processes.sort!{|proc1, proc2| proc1[1] <=> proc2[1]}
-        print processes
         turn_around_time = 0.0
         response_time = 0.0
         n = processes.length
