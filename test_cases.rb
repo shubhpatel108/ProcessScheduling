@@ -15,6 +15,7 @@ choice = gets.chomp.to_i
 
 include TypesOfCases
 
+g = Gruff::Line.new
 g1 = Gruff::Line.new
 g2 = Gruff::Line.new
 
@@ -33,7 +34,7 @@ when 2
 when 3
 	g1.title = 'loose alternate execution time, Response Time'
 	g2.title = 'loose alternate execution time, Turn Around Time'
-	batches = produce_loose_alternate(2)
+	batches = produce_loose_alternate(20)
 
 when 4
 	g1.title = 'All smallest execution time, Response Time'
@@ -48,17 +49,27 @@ when 5
 when 6
 	g1.title = 'Increasing execution time, Response Time'
 	g2.title = 'Increasing execution time, Turn Around Time'
-	batches = increasing
+	batches = increasing(20)
 
 when 7
 	g1.title = 'Decreasing execution time, Response Time'
 	g2.title = 'Decreasing execution time, Turn Around Time'
-	batches = decreasing
+	batches = decreasing(20)
 
 when 8
 	g1.title = 'Random alternative time, Response Time'
 	g2.title = 'Random alternative time, Turn Around Time'
 	batches = random_alternate(20)
+
+when 9
+	g1.title = 'Bump in middle, Response Time'
+	g2.title = 'Bump in middle, Turn Around Time'
+	batches = bump(20)
+
+when 10
+	g1.title = 'All same, Response Time'
+	g2.title = 'All same, Turn Around Time'
+	batches = all_same(20)
 end
 
 srt_resp = []
@@ -82,18 +93,25 @@ batches.each do |b|
 	batch_no += 1
 end
 
-# pids = {}
-# (1..@n).each_with_index do |pid, i|
-# 	pids[i] = pid.to_s
-# end
-# g.labels = pids
+pids = {}
+(1..@n).each_with_index do |pid, i|
+	pids[i] = pid.to_s
+end
+g.labels = pids
 
-# batches.each_with_index do |batch, i|
-# 	g.data "Batch no #{i+1}", batch.map{|p| p[2]}
-# end
+batches.each_with_index do |batch, i|
+	g.data "Batch no #{i+1}", batch.map{|p| p[2]}
+end
 
-# g.x_axis_label = 'PIDs'
-# g.y_axis_label = 'Execution time in secs'
+g.x_axis_label = 'PIDs'
+g.y_axis_label = 'Execution time in secs'
+
+g.write('execution.png')
+fork do
+	value = %x( eog execution.png &)
+end
+
+
 
 batch_nos = {}
 batches.each_with_index do |pid, i|
