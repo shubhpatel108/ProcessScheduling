@@ -191,6 +191,7 @@ module TypesOfCases
         print total_turn_around_time/num_processes
         puts "\n"
         print "--------------------------------------------\n"
+        return [total_waiting_time/num_processes, total_response_time/num_processes, total_turn_around_time/num_processes]
     end
 
     def shortest_remaining_time_first(processes)
@@ -231,11 +232,13 @@ module TypesOfCases
         print total_turn_around_time/num_processes
         puts "\n"
         print "--------------------------------------------\n"
+        return [total_waiting_time/num_processes, total_response_time/num_processes, total_turn_around_time/num_processes]
     end
 
     def first_come_first_serve(processes)
         #read_input("test.txt", processes)
         processes.sort!{|proc1, proc2| proc1[1] <=> proc2[1]}
+        print processes
         turn_around_time = 0.0
         response_time = 0.0
         current_time = 0.0
@@ -243,7 +246,7 @@ module TypesOfCases
           response_time += current_time - processes[i][1]
           for j in 1..processes[i][2]
             current_time += 1
-            #print "Current Time : #{current_time} Process in execution : #{processes[i][0]}\n"
+            # print "Current Time : #{current_time} Process in execution : #{processes[i][0]}\n"
           end
         turn_around_time = turn_around_time + current_time
         end
@@ -257,12 +260,17 @@ module TypesOfCases
         print "Average turn around time: "
         print turn_around_time/processes.length
         puts "\n"
+        print "Total time: "
+        print current_time
+        puts "\n"
         print "--------------------------------------------\n"
+        return [0.0, response_time/processes.length, turn_around_time/processes.length]
     end
 
     def round_robin(processes, time_quanta, context_switch)
         #read_input("test.txt", processes)
         processes.sort!{|proc1, proc2| proc1[1] <=> proc2[1]}
+        print processes
         turn_around_time = 0.0
         response_time = 0.0
         n = processes.length
@@ -275,13 +283,14 @@ module TypesOfCases
           end
           while j <= time_quanta and j <= processes[i][3]
             current_time += 1
-            #print "Current Time : #{current_time} Process in execution : #{processes[i][0]}\n"
+            # print "Current Time : #{current_time} Process in execution : #{processes[i][0]}\n"
             j += 1
           end
           processes[i][3] -= time_quanta
           if processes[i][3] <= 0
             turn_around_time += current_time - processes[i][1]
-            processes.delete_at(i) 
+            processes.delete_at(i)
+            i = (i-1) 
           end
           break if processes.empty?
           current_time += context_switch
@@ -297,7 +306,11 @@ module TypesOfCases
         print "Average turn around time: "
         print turn_around_time/n
         puts "\n"
+        print "Total time: "
+        print current_time
+        puts "\n"
         print "--------------------------------------------\n"
+        return [0.0, response_time/n, turn_around_time/n]
     end
 	
 end
